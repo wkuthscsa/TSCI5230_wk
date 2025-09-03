@@ -53,3 +53,4 @@ local.config.R
 *.rda
 *.xlsx
 .DS_Store
+output
