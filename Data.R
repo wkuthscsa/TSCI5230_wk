@@ -27,3 +27,16 @@ data0<-sapply(list.files(datasource,full.names = T),import) %>%
 #To view data list put View(data0) in the terminal
 #To view data frame (such as encounters) use View(data0[["../output/csv/DATAFRAMEs.csv"]]) in terminal
 ##To create a report use create_report(data0[["../output/csv/encounters.csv"]],config = configure_report(add_plot_prcomp = F))
+##
+
+  filter(data0[["conditions"]],grepl("\\bdiab",x=DESCRIPTION, ignore.case=TRUE)) %>% #grep will let you know the row number were
+    with(data=.,list(patient=unique(PATIENT),encounter=unique(ENCOUNTER))) %>% View() 
+
+  diabetes_rows <- data0[["conditions"]] %>%
+    filter(grepl("\\bdiab", DESCRIPTION, ignore.case = TRUE)) %>%
+    select(PATIENT, ENCOUNTER, DESCRIPTION)
+  
+  View(diabetes_rows)
+
+##
+##
