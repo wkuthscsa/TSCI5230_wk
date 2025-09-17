@@ -27,20 +27,34 @@ data0<-sapply(list.files(datasource,full.names = T),import) %>%
 #To view data list put View(data0) in the terminal
 #To view data frame (such as encounters) use View(data0[["../output/csv/DATAFRAMEs.csv"]]) in terminal
 ##To create a report use create_report(data0[["../output/csv/encounters.csv"]],config = configure_report(add_plot_prcomp = F))
-##
 
-  diabetes_unique_patient_and_encounter <- filter(data0[["conditions"]],grepl("\\bdiab",x=DESCRIPTION, ignore.case=TRUE)) %>% #grep will let you know the row number were
-    with(data=.,list(patient=unique(PATIENT),encounter=unique(ENCOUNTER))) 
-  View(diabetes_unique_patient_and_encounter)
-  
-  diabetes_unique_patient_rows_detailed <- filter(data0[["conditions"]],grepl("\\bdiab",x=DESCRIPTION, ignore.case=TRUE)) %>% 
-    select(PATIENT, ENCOUNTER, DESCRIPTION) 
-  View(diabetes_unique_patient_rows_detailed)
-  
-  meds_for_diabetes <- data0[["medications"]] %>%
-    filter(PATIENT %in% diabetes_rows$PATIENT)
-  View(meds_for_diabetes)
-  
 
-##
-##
+# Get all csv files
+files <- list.files(datasource, pattern = "\\.csv$", full.names = TRUE)
+
+results <- lapply(files, function(file) {
+  df <- import(file)
+  
+  # Turn into a character matrix so we can search everything
+  mat <- as.matrix(df)
+  
+  # Find matches for "diabetes" (case insensitive)
+  hits <- which(grepl("diabetes", mat, ignore.case = TRUE), arr.ind = TRUE)
+  
+  if (nrow(hits) > 0) {
+    data.frame(
+      File = basename(file),
+      Row = hits[, 1],
+      Column = colnames(mat)[hits[, 2]],
+      Value = mat[hits],
+      stringsAsFactors = FALSE
+    )
+  } else {
+    NULL
+  }
+})
+
+# Combine all results into one dataframe
+diabetes_hits <- bind_rows(results)
+
+print(diabetes_hits)
