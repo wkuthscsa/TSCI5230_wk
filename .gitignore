@@ -54,3 +54,4 @@ local.config.R
 *.xlsx
 .DS_Store
 output
+*.jar
