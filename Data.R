@@ -18,10 +18,10 @@ library(DataExplorer)
 #init----
 options(max.print=500);
 panderOptions('table.split.table',Inf); panderOptions('table.split.cells',Inf)
-datasource <- "../output/csv/"
+datasource <- "./output/csv/"
 met_rxnorm<-"./output/Metformin_RxNav_6809_table.csv"
 
-met_rxnorm_lookup <- import(rxnorm,skip=2) %>% filter(.,termType %in% c("BN","IN","MIN","PIN","SBD","SBDC","SBDF","SBDFP","SBDG","SCD","SCDC","SCDF","SCDG"))
+met_rxnorm_lookup <- import(met_rxnorm,skip=2) %>% filter(.,termType %in% c("BN","IN","MIN","PIN","SBD","SBDC","SBDF","SBDFP","SBDG","SCD","SCDC","SCDF","SCDG"))
 
 
 #data0<-import(list.files(datasource,full.names = T) [9]) is to name files to identify/ specific files
@@ -84,5 +84,16 @@ stop('join rows do not match') } else  {message('all clear')}
   message('There are ', nrow(Ljoin),' rows in Ljoin')
   met_Ljoin <- left_join(Ljoin, meds_for_diabetes, by=c("Id"="PATIENT"))
 
-##
-##
+  #Age distribution (average, min, max)
+  data0$patients %>% mutate(deathdate=as.Date(DEATHDATE),birthdate=as.Date(BIRTHDATE),
+                            alive=is.na(deathdate),
+                            age=as.numeric(pmin(Sys.Date(),deathdate,na.rm=TRUE)-birthdate)/365.25) %>%
+    group_by(alive) %>%
+    summarize( 
+      avg_age = mean(age,na.rm=TRUE),
+      min_age_at_death_or_censor=min(age,na.rm=TRUE),
+      max_age_at_death_or_censor=max(age,na.rm=TRUE),
+      count=n())
+      
+  
+  

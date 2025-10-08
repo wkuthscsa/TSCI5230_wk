@@ -14,7 +14,7 @@ library(ggfortify);
 #init----
 options(max.print=500);
 panderOptions('table.split.table',Inf); panderOptions('table.split.cells',Inf)
-datasource <- "../output/csv/"
+datasource <- "./output/csv/"
 
 runsynthea <- function(samplesize = 100,
                        state = "",
@@ -22,7 +22,7 @@ runsynthea <- function(samplesize = 100,
                        gender = "",
                        minage = 0,
                        maxage = 120,
-                       syntheaoptions = "--exporter.fhir.export=false --exporter.csv.export=true --exporter.csv.append_mode=true") {
+                       syntheaoptions = "--exporter.fhir.export=false --exporter.csv.export=true --exporter.csv.append_mode=false") {
   if (state != "") {
     state <- paste0('"', state, '"')
     if (city != "") {
@@ -47,4 +47,6 @@ runsynthea <- function(samplesize = 100,
   
 }
   
-runsynthea(gender="M", state="Texas")
+#runsynthea(gender="M", state="Texas")
+#
+

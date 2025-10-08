@@ -18,7 +18,7 @@ library(DataExplorer)
 #init----
 options(max.print=500);
 panderOptions('table.split.table',Inf); panderOptions('table.split.cells',Inf)
-datasource <- "../output/csv/"
+datasource <- "./output/csv/"
 #data0<-import(list.files(datasource,full.names = T) [9]) is to name files to identify/ specific files
 data0<-sapply(list.files(datasource,full.names = T),import) %>%
   #rename all objects in data0 to get rid of the prefix "../output/csv/" and suffix ".csv"
@@ -58,3 +58,10 @@ results <- lapply(files, function(file) {
 diabetes_hits <- bind_rows(results)
 
 print(diabetes_hits)
+
+#Age distribution (average, min, max)
+data0$patients %>%
+  summarize( 
+    avg_age = mean(Sys.Date()-BIRTHDATE, na.rm=TRUE))
+
+    
