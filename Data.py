@@ -69,3 +69,4 @@ age_summary = patients.groupby("alive").agg(
 ).reset_index()
 
 print(age_summary)
+
