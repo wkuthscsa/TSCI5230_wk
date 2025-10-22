@@ -4,6 +4,12 @@ import numpy as np
 from glob import glob
 from datetime import datetime
 
+
+debug = 0
+seed = 22
+np.random.seed(seed) #Set seed for reproducibility
+
+
 # Load all CSV files from the data source directory
 datasource = "./output/csv/"
 csv_files = glob(f"{datasource}/*.csv")
@@ -12,6 +18,8 @@ data0 = {f.split("/")[-1].replace(".csv", ""): pd.read_csv(f) for f in csv_files
 # Load Metformin RxNorm lookup table
 met_rxnorm = "./output/Metformin_RxNav_6809_table.csv"
 met_rxnorm_lookup = pd.read_csv(met_rxnorm, skiprows=2)
+met_rxnorm2 = met_rxnorm_lookup
+met_rxnorm3 = met_rxnorm_lookup.copy(deep=True)
 rxnorm_terms = ["BN", "IN", "MIN", "PIN", "SBD", "SBDC", "SBDF", "SBDFP", "SBDG", "SCD", "SCDC", "SCDF", "SCDG"]
 met_rxnorm_lookup = met_rxnorm_lookup[met_rxnorm_lookup["termType"].isin(rxnorm_terms)]
 
