@@ -13,7 +13,7 @@ np.random.seed(seed) #Set seed for reproducibility
 # Load all CSV files from the data source directory
 datasource = "./output/csv/"
 csv_files = glob(f"{datasource}/*.csv")
-data0 = {f.split("/")[-1].replace(".csv", ""): pd.read_csv(f) for f in csv_files}
+data0 = {f.replace("\\","/").replace(".csv","").split("/")[-1]: pd.read_csv(f) for f in csv_files}
 
 # Load Metformin RxNorm lookup table
 met_rxnorm = "./output/Metformin_RxNav_6809_table.csv"
@@ -68,13 +68,20 @@ patients["DEATHDATE"] = pd.to_datetime(patients["DEATHDATE"], errors="coerce")
 patients["BIRTHDATE"] = pd.to_datetime(patients["BIRTHDATE"], errors="coerce")
 patients["alive"] = patients["DEATHDATE"].isna()
 patients["age"] = ((np.minimum(datetime.today(), patients["DEATHDATE"].fillna(datetime.today())) - patients["BIRTHDATE"]).dt.days) / 365.25
-
-age_summary = patients.groupby("alive").agg(
-    avg_age=("age", "mean"),
-    min_age_at_death_or_censor=("age", "min"),
-    max_age_at_death_or_censor=("age", "max"),
-    count=("age", "count")
+age_summary = patients.groupby("alive")["age"].agg(
+    avg_age="mean",
+    min_age_at_death_or_censor="min",
+    max_age_at_death_or_censor=max",
+    count=count"
 ).reset_index()
+
+#def get_end_date(row):
+ #       death_date = row['DEATHDATE']
+  #      if pd.isna(death_date):
+   #         return today
+    #    else:
+     #       return min(today, death_date.date())
+
 
 print(age_summary)
 
