@@ -4,6 +4,13 @@ import numpy as np
 from glob import glob
 from datetime import datetime
 
+def get_end_date(row):
+    death_date = row['DEATHDATE']
+    if pd.isna(death_date):
+        return today
+    else:
+        return min(today, death_date.date())
+
 
 debug = 0
 seed = 22
@@ -67,7 +74,7 @@ met_Ljoin = pd.merge(
 patients["DEATHDATE"] = pd.to_datetime(patients["DEATHDATE"], errors="coerce")
 patients["BIRTHDATE"] = pd.to_datetime(patients["BIRTHDATE"], errors="coerce")
 patients["alive"] = patients["DEATHDATE"].isna()
-patients["age"] = ((np.minimum(datetime.today(), patients["DEATHDATE"].fillna(datetime.today())) - patients["BIRTHDATE"]).dt.days) / 365.25
+#patients["age"] = ((np.minimum(datetime.today(), patients["DEATHDATE"].fillna(datetime.today())) - patients["BIRTHDATE"]).dt.days) / 365.25
 age_summary = patients.groupby("alive")["age"].agg(
     avg_age="mean",
     min_age_at_death_or_censor="min",
@@ -75,12 +82,7 @@ age_summary = patients.groupby("alive")["age"].agg(
     count=count"
 ).reset_index()
 
-#def get_end_date(row):
- #       death_date = row['DEATHDATE']
-  #      if pd.isna(death_date):
-   #         return today
-    #    else:
-     #       return min(today, death_date.date())
+
 
 
 print(age_summary)
