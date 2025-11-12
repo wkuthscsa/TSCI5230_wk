@@ -1,7 +1,15 @@
-
+"""
+library(reticulate) # load the library for working with python from RStudio, this is R so it shouldn't be in an executable part of your python script
+repl_python() # get into an interactive python session. This is also an R command, so also should be here in the commented-out part
+# below here are python commands to run, bu only if you are missing that library. In this example, pandas
+import sys
+!python -m pip install pandas
+"""
 import pandas as pd
 import numpy as np
 import pprint
+
+ 
 
 from glob import glob
 from datetime import datetime
