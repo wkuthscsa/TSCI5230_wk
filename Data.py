@@ -93,8 +93,8 @@ print(age_summary)
 #Converting column to a Python list (what R calls a vector)
 medications['TOTALCOST'].tolist()
 total_cost_list=medications['TOTALCOST'].tolist()
-total_cost_list.round()
-round(total_cost_list)
+#total_cost_list.round() doesn't work becuase the list object doesn't have a round method
+#round(total_cost_list) doesn't work because the list can't be rounded, only the individual floating numbers
 
 #There are several ways to transform a value in a pyton list. Below you will find 3 commands to round a number in this list.
 result=[]
@@ -128,4 +128,4 @@ column_names
 dresult3=dict(zip(table_names,column_names))
 pprint.pprint(dresult3)
 
-unzi    
+
